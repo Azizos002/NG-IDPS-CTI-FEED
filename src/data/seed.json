@@ -1,0 +1,47 @@
+{
+  "actualities": [
+    {
+      "id": "a1f8c8d8-0001-4b2a-9f1a-1a2b3c4d5e6f",
+      "slug": "suspicious-ip-activity-2026-09",
+      "title": "Suspicious IP activity targeting corporate VPNs",
+      "summary": "Observed cluster of scans and brute-force attempts against corporate VPN endpoints.",
+      "content": "Observed repeated connection attempts from multiple IPs belonging to a known scanning range. Indicators suggest automated scanning followed by credential stuffing attempts.",
+      "type": "TECHNICAL_THREAT",
+      "severity": "HIGH",
+      "status": "PUBLISHED",
+      "publishedAt": "2026-09-02T10:00:00.000Z",
+      "source": { "name": "Internal Sensor Network" },
+      "tags": ["vpn","credential-stuffing","scanner"],
+      "iocs": [
+        { "type": "ip", "value": "203.0.113.45", "firstSeen": "2026-09-01T08:00:00.000Z" },
+        { "type": "ip", "value": "203.0.113.46", "firstSeen": "2026-09-01T08:05:00.000Z" }
+      ],
+      "references": [
+        { "title": "Observed traffic dump", "url": "https://example.com/dump" }
+      ],
+      "language": "en",
+      "createdBy": "analyst1",
+      "createdAt": "2026-09-01T09:00:00.000Z"
+    },
+    {
+      "id": "b2e9d9e9-0002-4b2a-9f1a-2b3c4d5e6f7g",
+      "slug": "phishing-awareness-2026-09",
+      "title": "Phishing campaign uses brand impersonation",
+      "summary": "A wide phishing campaign impersonating finance brand to harvest credentials.",
+      "content": "Multiple phishing emails observed that mimic finance provider. Users in several orgs reported suspicious emails.",
+      "type": "AWARENESS",
+      "severity": "LOW",
+      "status": "PUBLISHED",
+      "publishedAt": "2026-09-02T11:00:00.000Z",
+      "source": { "name": "Open-source reports" },
+      "tags": ["phishing","awareness","brand-impersonation"],
+      "iocs": [
+        { "type": "url", "value": "http://phish.example/login" }
+      ],
+      "references": [],
+      "language": "en",
+      "createdBy": "analyst2",
+      "createdAt": "2026-09-02T10:45:00.000Z"
+    }
+  ]
+}

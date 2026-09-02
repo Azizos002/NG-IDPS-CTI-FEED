@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -22,5 +24,17 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* App tokens */
+.bg-cti {
+  background: linear-gradient(180deg,#071024 0%, #0b1320 100%);
+}
+
+/* Utility for severity colors */
+.severity-critical { --severity: #ff3b30; }
+.severity-high { --severity: #ff8c00; }
+.severity-medium { --severity: #ffd60a; }
+.severity-low { --severity: #34c759; }
+.severity-info { --severity: #0ea5e9; }
