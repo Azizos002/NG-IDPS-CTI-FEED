@@ -1,6 +1,22 @@
 {
   "actualities": [
     {
+      "id": "ac9e3c8d-3328-40cb-b1ab-cd70435b6050",
+      "title": "Suspicious Credential Harvesting Campaign Detected in Laboratory Environment",
+      "summary": "A controlled phishing scenario was identified during laboratory monitoring. The campaign simulates credential-harvesting activity targeting users through fraudulent authentication pages.",
+      "content": "Overview\n\nA controlled credential-harvesting campaign was identified during a laboratory cybersecurity exercise conducted within the NG-IDPS environment.\n\nThe scenario reproduces a common phishing pattern in which a fraudulent web page attempts to convince a user to enter authentication information.\n\nTechnical Analysis\n\nThe simulated campaign relies on social-engineering techniques and a deceptive authentication interface.\n\nFrom a detection perspective, relevant indicators may include:\n\n- Access to suspicious domains or URLs\n- Repeated requests to authentication-related endpoints\n- Unusual HTTP request patterns\n- Redirection to non-approved resources\n- Repeated connections from the same source\n\nThe NG-IDPS platform can correlate network-based detections with machine-learning anomaly detection and CTI enrichment.\n\nDetection Relevance\n\nThis actuality is intended to demonstrate the CTI ingestion pipeline of NG-IDPS.\n\nThe published intelligence can be retrieved through the machine-readable CTI feed and consumed by the NG-IDPS CTI agent for classification, semantic enrichment and correlation.\n\nRecommended Actions\n\n1. Monitor authentication-related traffic for unusual patterns.\n2. Review suspicious domains and URLs observed during the exercise.\n3. Correlate network alerts with endpoint or user activity.\n4. Apply relevant detection rules after analyst validation.\n5. Continue monitoring for related indicators.\n\nLaboratory Notice\n\nThis publication is part of the NG-IDPS laboratory and demonstration environment.\n\nThe indicators and scenario described here are controlled demonstration data and must not be interpreted as a report of an active real-world campaign.",
+      "type": "TECHNICAL_THREAT",
+      "severity": "HIGH",
+      "status": "DRAFT",
+      "tags": [],
+      "iocs": [],
+      "references": [],
+      "language": "en",
+      "createdBy": "local-user",
+      "createdAt": "2026-09-03T16:10:10.673Z",
+      "updatedAt": "2026-09-03T16:10:10.673Z"
+    },
+    {
       "id": "a1f8c8d8-0001-4b2a-9f1a-1a2b3c4d5e6f",
       "slug": "suspicious-ip-activity-2026-09",
       "title": "Suspicious IP activity targeting corporate VPNs",
@@ -10,14 +26,31 @@
       "severity": "HIGH",
       "status": "PUBLISHED",
       "publishedAt": "2026-09-02T10:00:00.000Z",
-      "source": { "name": "Internal Sensor Network" },
-      "tags": ["vpn","credential-stuffing","scanner"],
+      "source": {
+        "name": "Internal Sensor Network"
+      },
+      "tags": [
+        "vpn",
+        "credential-stuffing",
+        "scanner"
+      ],
       "iocs": [
-        { "type": "ip", "value": "203.0.113.45", "firstSeen": "2026-09-01T08:00:00.000Z" },
-        { "type": "ip", "value": "203.0.113.46", "firstSeen": "2026-09-01T08:05:00.000Z" }
+        {
+          "type": "ip",
+          "value": "203.0.113.45",
+          "firstSeen": "2026-09-01T08:00:00.000Z"
+        },
+        {
+          "type": "ip",
+          "value": "203.0.113.46",
+          "firstSeen": "2026-09-01T08:05:00.000Z"
+        }
       ],
       "references": [
-        { "title": "Observed traffic dump", "url": "https://example.com/dump" }
+        {
+          "title": "Observed traffic dump",
+          "url": "https://example.com/dump"
+        }
       ],
       "language": "en",
       "createdBy": "analyst1",
@@ -33,10 +66,19 @@
       "severity": "LOW",
       "status": "PUBLISHED",
       "publishedAt": "2026-09-02T11:00:00.000Z",
-      "source": { "name": "Open-source reports" },
-      "tags": ["phishing","awareness","brand-impersonation"],
+      "source": {
+        "name": "Open-source reports"
+      },
+      "tags": [
+        "phishing",
+        "awareness",
+        "brand-impersonation"
+      ],
       "iocs": [
-        { "type": "url", "value": "http://phish.example/login" }
+        {
+          "type": "url",
+          "value": "http://phish.example/login"
+        }
       ],
       "references": [],
       "language": "en",
