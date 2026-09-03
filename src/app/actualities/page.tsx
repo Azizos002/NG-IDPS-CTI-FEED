@@ -8,21 +8,13 @@ import { useRouter } from 'next/navigation';
 export default function Page() {
   const router = useRouter();
 
-  const [q, setQ] = useState<string>('');
-  const [type, setType] = useState<string>('');
-  const [severity, setSeverity] = useState<string>('');
+  const [q, setQ] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('q') ?? '' : ''));
+  const [type, setType] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('type') ?? '' : ''));
+  const [severity, setSeverity] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('severity') ?? '' : ''));
   const [items, setItems] = useState<Actuality[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 10;
-
-  useEffect(() => {
-    // initialize filters from URL on mount
-    const sp = new URLSearchParams(window.location.search);
-    setQ(sp.get('q') ?? '');
-    setType(sp.get('type') ?? '');
-    setSeverity(sp.get('severity') ?? '');
-  }, []);
 
   useEffect(() => {
     // fetch when filters change
