@@ -1,15 +1,27 @@
 import React from 'react';
 
-export default function SeverityBadge({ severity }: { severity: string }) {
-  const cls =
+interface SeverityBadgeProps {
+  severity: string;
+  size?: 'sm' | 'md';
+}
+
+export default function SeverityBadge({ severity, size = 'md' }: SeverityBadgeProps) {
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-xs';
+
+  const colorClasses =
     severity === 'CRITICAL'
-      ? 'bg-red-600 text-white'
+      ? 'bg-red-600/20 text-red-300 border border-red-600/30 font-semibold'
       : severity === 'HIGH'
-      ? 'bg-orange-500 text-white'
+      ? 'bg-orange-600/20 text-orange-300 border border-orange-600/30 font-semibold'
       : severity === 'MEDIUM'
-      ? 'bg-yellow-400 text-neutral-900'
+      ? 'bg-yellow-600/20 text-yellow-300 border border-yellow-600/30 font-semibold'
       : severity === 'LOW'
-      ? 'bg-emerald-500 text-white'
-      : 'bg-sky-500 text-white';
-  return <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cls}`}>{severity}</span>;
+      ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-600/30 font-semibold'
+      : 'bg-sky-600/20 text-sky-300 border border-sky-600/30 font-semibold';
+
+  return (
+    <span className={`rounded-md font-medium whitespace-nowrap ${sizeClasses} ${colorClasses}`}>
+      {severity}
+    </span>
+  );
 }
