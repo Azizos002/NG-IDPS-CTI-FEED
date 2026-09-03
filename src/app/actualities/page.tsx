@@ -8,21 +8,13 @@ import { useRouter } from 'next/navigation';
 export default function Page() {
   const router = useRouter();
 
-  const [q, setQ] = useState<string>('');
-  const [type, setType] = useState<string>('');
-  const [severity, setSeverity] = useState<string>('');
+  const [q, setQ] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('q') ?? '' : ''));
+  const [type, setType] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('type') ?? '' : ''));
+  const [severity, setSeverity] = useState<string>(() => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('severity') ?? '' : ''));
   const [items, setItems] = useState<Actuality[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 10;
-
-  useEffect(() => {
-    // initialize filters from URL on mount
-    const sp = new URLSearchParams(window.location.search);
-    setQ(sp.get('q') ?? '');
-    setType(sp.get('type') ?? '');
-    setSeverity(sp.get('severity') ?? '');
-  }, []);
 
   useEffect(() => {
     // fetch when filters change
@@ -69,6 +61,24 @@ export default function Page() {
     }
   }
 
+  // infinite scroll sentinel
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    if (!sentinelRef.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !loading && items.length > visible.length) {
+            setPage((p) => p + 1);
+          }
+        });
+      },
+      { root: null, rootMargin: '200px', threshold: 0.1 }
+    );
+    obs.observe(sentinelRef.current);
+    return () => obs.disconnect();
+  }, [loading, items, visible.length]);
+
   return (
     <Layout>
       <h2 className="text-2xl font-semibold mb-4">Actualities</h2>
@@ -114,13 +124,21 @@ export default function Page() {
         </div>
       </div>
 
-      {loading ? <div className="text-zinc-400">Loading...</div> : <ActualityList items={visible} />}
-
-      {!loading && items.length > visible.length ? (
-        <div className="mt-4 text-center">
-          <button className="px-4 py-2 rounded bg-zinc-800 border border-zinc-600" onClick={() => setPage((p) => p + 1)}>Load more</button>
+      {loading && items.length === 0 ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-24 rounded bg-white/5 animate-pulse" />
+          ))}
         </div>
-      ) : null}
+      ) : (
+        <ActualityList items={visible} />
+      )}
+
+      <div ref={sentinelRef}></div>
+
+      {loading && items.length > 0 && (
+        <div className="mt-4 text-center text-zinc-400">Loading more...</div>
+      )}
 
     </Layout>
   );

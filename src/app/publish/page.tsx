@@ -171,8 +171,14 @@ export default function Page() {
         )}
 
         <div className="flex gap-2">
-          <button className="px-4 py-2 rounded bg-foreground text-background" onClick={() => submitAs('DRAFT')} disabled={saving}>Save Draft</button>
-          <button className="px-4 py-2 rounded bg-green-600" onClick={() => submitAs('PUBLISHED')} disabled={saving}>Publish</button>
+          <button className="px-4 py-2 rounded bg-foreground text-background flex items-center gap-2" onClick={() => submitAs('DRAFT')} disabled={saving}>
+            {saving ? <span className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" /> : null}
+            <span>{saving ? 'Saving...' : 'Save Draft'}</span>
+          </button>
+          <button className="px-4 py-2 rounded bg-green-600 flex items-center gap-2" onClick={() => submitAs('PUBLISHED')} disabled={saving}>
+            {saving ? <span className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" /> : null}
+            <span>{saving ? (/* publish in progress */ 'Saving...') : 'Publish'}</span>
+          </button>
         </div>
       </form>
     </Layout>
