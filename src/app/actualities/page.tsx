@@ -61,6 +61,24 @@ export default function Page() {
     }
   }
 
+  // infinite scroll sentinel
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    if (!sentinelRef.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !loading && items.length > visible.length) {
+            setPage((p) => p + 1);
+          }
+        });
+      },
+      { root: null, rootMargin: '200px', threshold: 0.1 }
+    );
+    obs.observe(sentinelRef.current);
+    return () => obs.disconnect();
+  }, [loading, items, visible.length]);
+
   return (
     <Layout>
       <h2 className="text-2xl font-semibold mb-4">Actualities</h2>
@@ -106,13 +124,21 @@ export default function Page() {
         </div>
       </div>
 
-      {loading ? <div className="text-zinc-400">Loading...</div> : <ActualityList items={visible} />}
-
-      {!loading && items.length > visible.length ? (
-        <div className="mt-4 text-center">
-          <button className="px-4 py-2 rounded bg-zinc-800 border border-zinc-600" onClick={() => setPage((p) => p + 1)}>Load more</button>
+      {loading && items.length === 0 ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-24 rounded bg-white/5 animate-pulse" />
+          ))}
         </div>
-      ) : null}
+      ) : (
+        <ActualityList items={visible} />
+      )}
+
+      <div ref={sentinelRef}></div>
+
+      {loading && items.length > 0 && (
+        <div className="mt-4 text-center text-zinc-400">Loading more...</div>
+      )}
 
     </Layout>
   );
