@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #071024;
+  --foreground: #e8edf5;
 }
 
 @theme inline {
@@ -12,15 +12,44 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
+  min-height: 100vh;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* CTI application background */
+.bg-cti {
+  background: linear-gradient(180deg, #071024 0%, #0b1320 100%);
+}
+
+/* Severity tokens */
+.severity-critical {
+  --severity: #ff3b30;
+}
+
+.severity-high {
+  --severity: #ff8c00;
+}
+
+.severity-medium {
+  --severity: #ffd60a;
+}
+
+.severity-low {
+  --severity: #34c759;
+}
+
+.severity-info {
+  --severity: #0ea5e9;
 }
