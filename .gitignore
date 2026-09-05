@@ -41,6 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # local sqlite
-/cti_feed.db
-/cti_feed.db-wal
-/cti_feed.db-shm
+# /cti_feed.db
+# /cti_feed.db-wal
+# /cti_feed.db-shm
