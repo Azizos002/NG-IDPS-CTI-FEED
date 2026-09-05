@@ -22,9 +22,19 @@ export default function ActualitiesPage() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [feedScope, setFeedScope] = useState<FeedScope>('all');
+  const [filtersReady, setFiltersReady] = useState(false);
   const pageSize = 12;
 
   useEffect(() => {
+    const url = new URL(window.location.href);
+    setQ(url.searchParams.get('q') || '');
+    setType(url.searchParams.get('type') || '');
+    setSeverity(url.searchParams.get('severity') || '');
+    setFiltersReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!filtersReady) return;
     let mounted = true;
     async function fetchData() {
       setLoading(true);
@@ -60,7 +70,7 @@ export default function ActualitiesPage() {
     return () => {
       mounted = false;
     };
-  }, [q, type, severity, router]);
+  }, [q, type, severity, router, filtersReady]);
 
   const scopedItems = useMemo(() => {
     if (feedScope === 'all') return items;

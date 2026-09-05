@@ -2,7 +2,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Activity, Database, Filter, Globe, ShieldAlert, Terminal } from 'lucide-react';
+import {
+  Activity,
+  Bug,
+  Database,
+  Filter,
+  Globe,
+  Search,
+  Settings,
+  ShieldAlert,
+  Terminal,
+  Users,
+} from 'lucide-react';
 
 interface SiteHeaderProps {
   currentPage?: string;
@@ -15,14 +26,16 @@ export default function SiteHeader({ currentPage }: SiteHeaderProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/actualities?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
+    } else {
+      router.push('/search');
     }
   };
 
   const isActive = (path: string) => currentPage === path;
 
-  const navLink = (path: string, label: string) =>
+  const navLink = (path: string) =>
     `px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-base ${
       isActive(path)
         ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
@@ -52,7 +65,7 @@ export default function SiteHeader({ currentPage }: SiteHeaderProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-950/70 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/20 transition-base font-mono text-sm"
-                aria-label="Search actualities"
+                aria-label="Search indicators"
               />
             </div>
           </form>
@@ -70,11 +83,23 @@ export default function SiteHeader({ currentPage }: SiteHeaderProps) {
           <Link href="/actualities" className={navLink('/actualities')}>
             <span className="inline-flex items-center gap-1.5"><Globe className="h-3.5 w-3.5" />CTI Feed</span>
           </Link>
+          <Link href="/threat-actors" className={navLink('/threat-actors')}>
+            <span className="inline-flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />Actors</span>
+          </Link>
+          <Link href="/cves" className={navLink('/cves')}>
+            <span className="inline-flex items-center gap-1.5"><Bug className="h-3.5 w-3.5" />CVEs</span>
+          </Link>
+          <Link href="/search" className={navLink('/search')}>
+            <span className="inline-flex items-center gap-1.5"><Search className="h-3.5 w-3.5" />Analyzer</span>
+          </Link>
           <Link href="/publish" className={navLink('/publish')}>
             <span className="inline-flex items-center gap-1.5"><Terminal className="h-3.5 w-3.5" />Publish</span>
           </Link>
           <Link href="/manage" className={navLink('/manage')}>
             <span className="inline-flex items-center gap-1.5"><Database className="h-3.5 w-3.5" />Manage</span>
+          </Link>
+          <Link href="/settings" className={navLink('/settings')}>
+            <span className="inline-flex items-center gap-1.5"><Settings className="h-3.5 w-3.5" />Settings</span>
           </Link>
           <Link
             href="/api/v1/feed"
