@@ -4,7 +4,10 @@ import Database from 'better-sqlite3';
 import { NewsCategory, NewsItem } from '@/types/news';
 import { DEFAULT_NEWS } from '@/lib/news';
 
-const DB_PATH = path.join(process.cwd(), 'cti_feed.db');
+// On Vercel serverless functions, only the /tmp directory is writable.
+const DB_PATH = process.env.VERCEL
+  ? path.join('/tmp', 'cti_feed.db')
+  : path.join(process.cwd(), 'cti_feed.db');
 
 interface ArticleRow {
   id: string;
