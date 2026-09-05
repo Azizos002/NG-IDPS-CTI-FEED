@@ -1,119 +1,52 @@
 import fs from 'fs';
 import path from 'path';
-import Database from 'better-sqlite3';
-import { NewsCategory, NewsItem } from '@/types/news';
+import { NewsItem } from '@/types/news';
 import { DEFAULT_NEWS } from '@/lib/news';
 
-// On Vercel serverless functions, only the /tmp directory is writable.
-const DB_PATH = process.env.VERCEL
-  ? path.join('/tmp', 'cti_feed.db')
-  : path.join(process.cwd(), 'cti_feed.db');
+// On Vercel, store in the writable /tmp directory. Locally, store in /data/articles.json
+const DATA_DIR = process.env.VERCEL
+  ? '/tmp'
+  : path.join(process.cwd(), 'data');
 
-interface ArticleRow {
-  id: string;
-  title: string;
-  category: NewsCategory;
-  summary: string;
-  content: string;
-  iocs: string;
-  proposed_suricata_rule: string | null;
-  created_at: string;
-}
+const FILE_PATH = path.join(DATA_DIR, 'articles.json');
 
-let dbInstance: Database.Database | null = null;
-
-export function getDb(): Database.Database {
-  if (dbInstance) return dbInstance;
-
-  dbInstance = new Database(DB_PATH);
-  dbInstance.pragma('journal_mode = WAL');
-  dbInstance.exec(`
-    CREATE TABLE IF NOT EXISTS articles (
-      id TEXT PRIMARY KEY,
-      title TEXT NOT NULL,
-      category TEXT CHECK(category IN ('AWARENESS', 'CRITICAL_ATTACK')) NOT NULL,
-      summary TEXT NOT NULL,
-      content TEXT NOT NULL,
-      iocs TEXT DEFAULT '[]',
-      proposed_suricata_rule TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-  `);
-
-  seedIfEmpty(dbInstance);
-  return dbInstance;
-}
-
-function seedIfEmpty(db: Database.Database) {
-  const count = db.prepare('SELECT COUNT(*) as n FROM articles').get() as { n: number };
-  if (count.n > 0) return;
-
-  const insert = db.prepare(`
-    INSERT INTO articles (id, title, category, summary, content, iocs, proposed_suricata_rule, created_at)
-    VALUES (@id, @title, @category, @summary, @content, @iocs, @proposed_suricata_rule, @created_at)
-  `);
-
-  const tx = db.transaction((items: NewsItem[]) => {
-    for (const item of items) {
-      insert.run(toRow(item));
-    }
-  });
-  tx(DEFAULT_NEWS);
-}
-
-function toRow(item: NewsItem) {
-  return {
-    id: item.id,
-    title: item.title,
-    category: item.category,
-    summary: item.summary,
-    content: item.content,
-    iocs: JSON.stringify(item.iocs ?? []),
-    proposed_suricata_rule: item.proposed_suricata_rule ?? null,
-    created_at: item.createdAt,
-  };
-}
-
-function fromRow(row: ArticleRow): NewsItem {
-  let iocs: string[] = [];
-  try {
-    const parsed = JSON.parse(row.iocs || '[]');
-    iocs = Array.isArray(parsed) ? parsed.map(String) : [];
-  } catch {
-    iocs = [];
+function ensureFileExists(): NewsItem[] {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 
-  return {
-    id: row.id,
-    title: row.title,
-    category: row.category,
-    summary: row.summary,
-    content: row.content,
-    iocs,
-    proposed_suricata_rule: row.proposed_suricata_rule || undefined,
-    createdAt: row.created_at,
-  };
+  if (!fs.existsSync(FILE_PATH)) {
+    fs.writeFileSync(FILE_PATH, JSON.stringify(DEFAULT_NEWS, null, 2), 'utf-8');
+    return DEFAULT_NEWS;
+  }
+
+  try {
+    const fileData = fs.readFileSync(FILE_PATH, 'utf-8');
+    return JSON.parse(fileData) as NewsItem[];
+  } catch {
+    fs.writeFileSync(FILE_PATH, JSON.stringify(DEFAULT_NEWS, null, 2), 'utf-8');
+    return DEFAULT_NEWS;
+  }
 }
 
 export function listArticles(): NewsItem[] {
-  const rows = getDb()
-    .prepare('SELECT * FROM articles ORDER BY datetime(created_at) DESC')
-    .all() as ArticleRow[];
-  return rows.map(fromRow);
+  const articles = ensureFileExists();
+  return articles.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 export function insertArticle(item: NewsItem): NewsItem {
-  getDb()
-    .prepare(
-      `
-      INSERT INTO articles (id, title, category, summary, content, iocs, proposed_suricata_rule, created_at)
-      VALUES (@id, @title, @category, @summary, @content, @iocs, @proposed_suricata_rule, @created_at)
-    `
-    )
-    .run(toRow(item));
+  const articles = ensureFileExists();
+  const updated = [item, ...articles];
+  fs.writeFileSync(FILE_PATH, JSON.stringify(updated, null, 2), 'utf-8');
   return item;
 }
 
-export function dbFileExists() {
-  return fs.existsSync(DB_PATH);
+export function resetArticles(): NewsItem[] {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  fs.writeFileSync(FILE_PATH, JSON.stringify(DEFAULT_NEWS, null, 2), 'utf-8');
+  return DEFAULT_NEWS;
 }
