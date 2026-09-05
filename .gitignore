@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local sqlite
+/cti_feed.db
+/cti_feed.db-wal
+/cti_feed.db-shm

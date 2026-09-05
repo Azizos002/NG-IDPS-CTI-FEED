@@ -1,0 +1,15 @@
+import { NewsItem } from '@/types/news';
+
+export const DEFAULT_NEWS: NewsItem[] = [
+  {
+    id: 'seed-awareness-001',
+    title: 'Laboratory Security Briefing: Report Suspicious Login Pages',
+    category: 'AWARENESS',
+    summary:
+      'NG-IDPS operators should treat unexpected Microsoft 365 or VPN login pages as hostile until verified through official channels.',
+    content:
+      'This is a standing awareness notice for the demonstration environment. Do not enter credentials on unsolicited authentication pages. Forward the URL to the SOC and continue monitoring NG-IDPS alerts.',
+    iocs: ['login-microsoft-secure.example', 'm365-auth.example'],
+    createdAt: '2026-09-04T09:00:00.000Z',
+  },
+];

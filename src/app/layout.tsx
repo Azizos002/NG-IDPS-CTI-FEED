@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NG-IDPS CTI Feed - Cybersecurity Intelligence Platform",
-  description: "Real-time cybersecurity threat intelligence and awareness feed. Discover, analyze, and monitor cyber threats and security intelligence.",
+  title: "NG-IDPS Security Portal",
+  description: "Laboratory cybersecurity news feed and scenario injector for NG-IDPS live demonstrations.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
