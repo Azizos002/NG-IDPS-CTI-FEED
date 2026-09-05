@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
 import { Actuality } from '@/models/actuality';
 import SeverityBadge from '@/components/SeverityBadge';
+import { Database } from 'lucide-react';
 
 export default function ManagePage() {
   const [actualities, setActualities] = useState<Actuality[]>([]);
@@ -43,77 +44,78 @@ export default function ManagePage() {
 
   return (
     <Layout currentPage="/manage">
-      {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-heading-lg text-foreground mb-2">Manage Intelligence Reports</h1>
-        <p className="text-text-secondary">Review, publish, and manage threat intelligence content</p>
+        <div className="inline-flex items-center gap-2 mb-2 text-[11px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+          <Database className="h-3.5 w-3.5" />
+          Intelligence Queue
+        </div>
+        <h1 className="text-heading-lg text-slate-100 mb-2">Manage Intelligence Reports</h1>
+        <p className="text-slate-400">Review, publish, and manage threat intelligence content</p>
       </div>
 
-      {/* Content Table */}
-      <div className="bg-cti-800 border border-cti-600 rounded-lg overflow-hidden">
+      <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-xl overflow-hidden">
         {actualities.length === 0 ? (
-          <div className="p-8 text-center text-text-secondary">
-            <div className="text-4xl mb-3">📭</div>
+          <div className="p-8 text-center text-slate-400">
             <p>No actualities found.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full">
-              <thead className="bg-cti-900 border-b border-cti-600">
+              <thead className="bg-slate-950/80 border-b border-slate-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Severity</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Created</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-text-tertiary uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Severity</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Created</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider font-mono">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-cti-600">
+              <tbody className="divide-y divide-slate-800">
                 {actualities.map((a) => (
-                  <tr key={a.id} className="hover:bg-cti-700/50 transition-colors">
+                  <tr key={a.id} className="hover:bg-slate-800/40 transition-colors">
                     <td className="px-6 py-4">
                       <a
                         href={`/actualities/${a.id}`}
-                        className="text-foreground hover:text-blue-400 transition-colors font-medium line-clamp-1"
+                        className="text-slate-100 hover:text-cyan-300 transition-colors font-medium line-clamp-1"
                       >
                         {a.title}
                       </a>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-text-secondary">{getThreatTypeLabel(a.type)}</span>
+                      <span className="text-sm text-slate-400">{getThreatTypeLabel(a.type)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <SeverityBadge severity={a.severity} size="sm" />
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-mono ${
                         a.status === 'PUBLISHED'
-                          ? 'bg-green-600/20 text-green-300 border border-green-600/30'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                           : a.status === 'DRAFT'
-                          ? 'bg-yellow-600/20 text-yellow-300 border border-yellow-600/30'
+                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                           : a.status === 'REVIEW'
-                          ? 'bg-blue-600/20 text-blue-300 border border-blue-600/30'
-                          : 'bg-red-600/20 text-red-300 border border-red-600/30'
+                          ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                          : 'bg-red-500/10 text-red-400 border border-red-500/30'
                       }`}>
                         {a.status}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-text-tertiary">{formatDate(a.createdAt)}</span>
+                      <span className="text-sm text-slate-500 font-mono">{formatDate(a.createdAt)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <a
                           href={`/actualities/${a.id}`}
-                          className="px-3 py-1.5 rounded-lg bg-cti-700 hover:bg-cti-600 text-foreground text-sm font-medium transition-colors"
+                          className="px-3 py-1.5 rounded-lg bg-slate-950/70 border border-slate-800 hover:border-slate-700 text-slate-100 text-sm font-medium transition-colors"
                         >
                           View
                         </a>
                         {a.status !== 'PUBLISHED' && (
                           <button
                             onClick={() => publish(a.id)}
-                            className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors"
+                            className="px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-sm font-medium transition-colors"
                           >
                             Publish
                           </button>

@@ -1,60 +1,53 @@
 import Layout from '@/components/Layout';
 import { readSeed } from '@/lib/seed';
 import ArticleCard from '@/components/ArticleCard';
-
-function StatsSummary({ total, critical, high, updated }: { total: number; critical: number; high: number; updated: string }) {
-  return (
-    <div className="grid grid-cols-4 gap-4 mb-12">
-      <div className="bg-cti-800 border border-cti-600 rounded-lg p-4">
-        <div className="text-sm text-text-tertiary mb-1">Total Reports</div>
-        <div className="text-2xl font-bold text-foreground">{total}</div>
-      </div>
-      <div className="bg-cti-800 border border-cti-600 rounded-lg p-4">
-        <div className="text-sm text-red-400 mb-1">🔴 Critical</div>
-        <div className="text-2xl font-bold text-red-300">{critical}</div>
-      </div>
-      <div className="bg-cti-800 border border-cti-600 rounded-lg p-4">
-        <div className="text-sm text-orange-400 mb-1">🟠 High</div>
-        <div className="text-2xl font-bold text-orange-300">{high}</div>
-      </div>
-      <div className="bg-cti-800 border border-cti-600 rounded-lg p-4">
-        <div className="text-sm text-text-tertiary mb-1">Last Updated</div>
-        <div className="text-sm font-medium text-foreground">{updated}</div>
-      </div>
-    </div>
-  );
-}
+import MetricsRibbon from '@/components/MetricsRibbon';
+import { collectMetrics } from '@/lib/cti-format';
+import { Activity } from 'lucide-react';
 
 export default function Home() {
   const { actualities } = readSeed();
   const published = actualities.filter((a) => a.status === 'PUBLISHED');
   const featured = published[0];
   const latest = published.slice(0, 10);
-  const critical = published.filter((a) => a.severity === 'CRITICAL');
-  const high = published.filter((a) => a.severity === 'HIGH');
+  const metrics = collectMetrics(published);
 
   return (
     <Layout currentPage="/">
-      {/* Hero Section */}
+      <section className="mb-8 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-2 mb-3 text-[11px] font-mono uppercase tracking-[0.2em] text-cyan-400">
+            <Activity className="h-3.5 w-3.5" />
+            SOC Command Surface
+          </div>
+          <h1 className="text-display text-slate-100">Cyber Threat Intelligence Feed (CTI)</h1>
+          <p className="text-slate-400 mt-2">High-density laboratory feed for IOC ingestion, actor tagging, and analyst workflow.</p>
+        </div>
+        <div className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5">
+          <span className="live-pulse inline-block w-2 h-2 rounded-full bg-emerald-400" />
+          <span className="text-xs font-mono text-emerald-400">LIVE FEED / SYNCED</span>
+        </div>
+      </section>
+
+      <div className="mb-10">
+        <MetricsRibbon
+          totalIocs={metrics.totalIocs}
+          maliciousIps={metrics.maliciousIps}
+          threatActors={metrics.threatActors}
+          avgConfidence={metrics.avgConfidence}
+        />
+      </div>
+
       {featured ? (
         <section className="mb-12">
           <ArticleCard article={featured} featured={true} />
         </section>
       ) : null}
 
-      {/* Stats Summary */}
-      <StatsSummary 
-        total={published.length} 
-        critical={critical.length}
-        high={high.length}
-        updated={new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-      />
-
-      {/* Latest Intelligence Section */}
       <section>
         <div className="mb-6">
-          <h2 className="text-heading-lg text-foreground mb-2">Latest Threat Intelligence</h2>
-          <p className="text-text-secondary">The most recent cybersecurity and threat intelligence reports</p>
+          <h2 className="text-heading-lg text-slate-100 mb-2">Latest Threat Intelligence</h2>
+          <p className="text-slate-400">Most recent published reports from the laboratory CTI pipeline</p>
         </div>
         <div className="space-y-4">
           {latest.length > 0 ? (
@@ -62,7 +55,7 @@ export default function Home() {
               <ArticleCard key={article.id} article={article} />
             ))
           ) : (
-            <div className="text-center py-12 text-text-secondary">
+            <div className="text-center py-12 text-slate-400 border border-dashed border-slate-800 rounded-xl">
               <p>No published intelligence yet.</p>
             </div>
           )}

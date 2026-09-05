@@ -1,4 +1,5 @@
 import React from 'react';
+import { Database } from 'lucide-react';
 import { Actuality } from '@/models/actuality';
 import ArticleCard from './ArticleCard';
 
@@ -17,7 +18,7 @@ export default function ArticleFeed({
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-32 rounded-lg bg-cti-800/50 animate-pulse" />
+          <div key={i} className="h-32 rounded-xl bg-slate-900/60 border border-slate-800 animate-pulse" />
         ))}
       </div>
     );
@@ -25,9 +26,9 @@ export default function ArticleFeed({
 
   if (!articles || articles.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-text-secondary mb-2">📭</div>
-        <p className="text-text-secondary">{emptyMessage}</p>
+      <div className="text-center py-12 border border-dashed border-slate-800 rounded-xl bg-slate-900/40">
+        <Database className="h-6 w-6 mx-auto mb-2 text-slate-500" />
+        <p className="text-slate-400">{emptyMessage}</p>
       </div>
     );
   }

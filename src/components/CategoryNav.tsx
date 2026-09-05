@@ -8,18 +8,18 @@ interface CategoryNavProps {
 
 export default function CategoryNav({ categories, selected, onSelect }: CategoryNavProps) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto pb-2 -mb-2 custom-scrollbar">
       {categories.map((category) => (
         <button
           key={category}
           onClick={() => onSelect(category)}
-          className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-base ${
+          className={`px-3 py-1.5 rounded-full font-mono text-xs uppercase tracking-wide whitespace-nowrap transition-base border ${
             selected === category
-              ? 'bg-blue-600 text-white'
-              : 'bg-cti-800 text-text-secondary hover:text-foreground hover:bg-cti-700'
+              ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40'
+              : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-100 hover:border-slate-700'
           }`}
         >
-          {category}
+          {category.replaceAll('_', ' ')}
         </button>
       ))}
     </div>
